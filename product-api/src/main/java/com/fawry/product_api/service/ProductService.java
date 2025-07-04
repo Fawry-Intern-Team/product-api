@@ -1,18 +1,18 @@
 package com.fawry.product_api.service;
 
 import com.fawry.product_api.model.dto.ProductDto;
-import com.fawry.product_api.model.entity.Product;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ProductService {
-    Product getProductById(Long id);
+    ProductDto addProduct(ProductDto productDto);
 
-    List<Product> getAllProducts();
+    ProductDto getProductById(UUID id);
 
-    Product addProduct(ProductDto productDto);
+    List<ProductDto> getAllProducts();
 
-    Product updateProduct(Long id, ProductDto productDto);
+    ProductDto updateProduct(UUID id, ProductDto productDto);
 
-    Product deleteProduct(Long id);
+    ProductDto deleteProduct(UUID id);
 }

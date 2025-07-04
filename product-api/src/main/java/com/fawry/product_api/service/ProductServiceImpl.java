@@ -6,66 +6,77 @@ import com.fawry.product_api.model.entity.Product;
 import com.fawry.product_api.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
-@Service
 @Slf4j
-public class  ProductServiceImpl implements ProductService {
+@Service
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
+        this.productMapper = productMapper;
     }
 
     @Override
-    public Product addProduct(ProductDto productDto) {
-        return productRepository.save(ProductMapper.INSTANCE.toEntity(productDto));
+    public ProductDto addProduct(ProductDto productDto) {
+        log.info("Adding product to database: {}", productDto);
+        productRepository.save(productMapper.toEntity(productDto));
+
+        log.info("Product added successfully: {}", productDto.getName());
+        return productDto;
     }
 
     @Override
-    @Cacheable(value = "product", key = "#id")
-    public Product getProductById(Long id) {
+    public ProductDto getProductById(UUID id) {
         log.info("Fetching product from database for id: {}", id);
-        // 🔴 Delay for testing (e.g. 3 seconds)
-        try {
-            Thread.sleep(3000); // 3000 ms = 3 seconds
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException(e);
-        }
-        return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+        Product existingProduct = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+
+        log.info("Product found: {}", existingProduct.getName());
+
+        return productMapper.toDto(existingProduct);
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDto> getAllProducts() {
+        log.info("Fetching all products from database");
+        List<Product> products = productRepository.findAll();
+        log.info("Total products found: {}", products.size());
+
+        return productMapper.toDtoList(products);
     }
 
     @Override
-    @CacheEvict(value = "product", key = "#id")
-    public Product updateProduct(Long id, ProductDto productDto) {
-        Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+    public ProductDto updateProduct(UUID id, ProductDto productDto) {
+        log.info("Fetching product for update with id: {}", id);
+        Product existingProduct = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
 
-        Product updatedProduct = ProductTransformation.transform(productDto);
-        updatedProduct.setId(existingProduct.getId());
+        productMapper.updateProductFromDto(productDto, existingProduct);
+        log.info("Updating product with id: {}", id);
 
-        return productRepository.save(updatedProduct);
+        productRepository.save(existingProduct);
+        log.info("Product updated successfully: {}", existingProduct.getName());
+
+        return productMapper.toDto(existingProduct);
+
     }
 
     @Override
-    @CacheEvict(value = "product", key = "#id")
-    public Product deleteProduct(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+    public ProductDto deleteProduct(UUID id) {
+        log.info("Fetching product for deletion with id: {}", id);
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+
+        log.info("Deleting product with id: {}", id);
         productRepository.delete(product);
-        return product;
+        log.info("Product deleted successfully: {}", product.getName());
+
+        return productMapper.toDto(product);
+
     }
 }

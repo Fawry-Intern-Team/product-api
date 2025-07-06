@@ -17,4 +17,6 @@ public interface ProductService {
     ProductDto deleteProduct(UUID id);
 
     List<ProductDto> findByCategoryName(String categoryName);
+
+    List<ProductDto> getProductsByPriceRange(double minPrice, double maxPrice);
 }

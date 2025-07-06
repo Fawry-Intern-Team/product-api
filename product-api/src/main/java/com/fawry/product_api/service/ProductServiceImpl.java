@@ -100,4 +100,11 @@ public class ProductServiceImpl implements ProductService {
         List<Product> productsList = productRepository.findByCategoryName(categoryName);
         return productMapper.toDtoList(productsList);
     }
+
+    @Override
+    public List<ProductDto> getProductsByPriceRange(double minPrice, double maxPrice) {
+        log.info("Fetching products by price range: {} - {}", minPrice, maxPrice);
+        List<Product> productsList = productRepository.findByPriceBetween(minPrice, maxPrice);
+        return productMapper.toDtoList(productsList);
+    }
 }

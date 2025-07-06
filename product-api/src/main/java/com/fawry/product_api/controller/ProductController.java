@@ -22,6 +22,10 @@ public class ProductController {
         this.productService = productService;
     }
 
+    /******************************************************************************************************/
+    /********************************* Product Management Endpoints ***************************************/
+    /******************************************************************************************************/
+
     @PostMapping
     public ResponseEntity<ProductDto> addProduct(@Valid @RequestBody ProductDto productDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.addProduct(productDto));
@@ -47,8 +51,18 @@ public class ProductController {
         return ResponseEntity.ok(productService.deleteProduct(id));
     }
 
+    /******************************************************************************************************/
+    /******************************* Product Search and Filtering Endpoints *******************************/
+    /******************************************************************************************************/
+
     @GetMapping("/category")
     public ResponseEntity<List<ProductDto>> getProductsByCategory(@RequestParam String categoryName) {
         return ResponseEntity.ok(productService.findByCategoryName(categoryName));
+    }
+
+    @GetMapping("/price")
+    public ResponseEntity<List<ProductDto>> getProductsByPriceRange(@RequestParam double minPrice,
+                                                                    @RequestParam double maxPrice) {
+        return ResponseEntity.ok(productService.getProductsByPriceRange(minPrice, maxPrice));
     }
 }

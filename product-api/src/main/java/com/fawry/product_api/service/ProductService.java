@@ -15,4 +15,6 @@ public interface ProductService {
     ProductDto updateProduct(UUID id, ProductDto productDto);
 
     ProductDto deleteProduct(UUID id);
+
+    List<ProductDto> findByCategoryName(String categoryName);
 }

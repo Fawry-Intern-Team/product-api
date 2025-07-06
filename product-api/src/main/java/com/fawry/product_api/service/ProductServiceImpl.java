@@ -1,8 +1,11 @@
 package com.fawry.product_api.service;
 
+import com.fawry.product_api.mapper.CategoryMapper;
 import com.fawry.product_api.mapper.ProductMapper;
 import com.fawry.product_api.model.dto.ProductDto;
+import com.fawry.product_api.model.entity.Category;
 import com.fawry.product_api.model.entity.Product;
+import com.fawry.product_api.repository.CategoryRepository;
 import com.fawry.product_api.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +20,31 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final CategoryMapper categoryMapper;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+    public ProductServiceImpl(ProductRepository productRepository,
+                              ProductMapper productMapper, CategoryMapper categoryMapper,
+                              CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
+        this.categoryMapper = categoryMapper;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
     public ProductDto addProduct(ProductDto productDto) {
         log.info("Adding product to database: {}", productDto);
-        productRepository.save(productMapper.toEntity(productDto));
+        Category category = categoryRepository.findByName(productDto.getCategoryName())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
 
+        Product product = productMapper.toEntity(productDto);
+        product.setCategory(category);
+
+        productRepository.save(product);
         log.info("Product added successfully: {}", productDto.getName());
-        return productDto;
+        return productMapper.toDto(product);
     }
 
     @Override
@@ -78,5 +92,12 @@ public class ProductServiceImpl implements ProductService {
 
         return productMapper.toDto(product);
 
+    }
+
+    @Override
+    public List<ProductDto> findByCategoryName(String categoryName) {
+        log.info("Fetching products by category name: {}", categoryName);
+        List<Product> productsList = productRepository.findByCategoryName(categoryName);
+        return productMapper.toDtoList(productsList);
     }
 }

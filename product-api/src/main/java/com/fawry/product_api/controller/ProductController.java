@@ -4,6 +4,7 @@ import com.fawry.product_api.model.dto.ProductDto;
 import com.fawry.product_api.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductDto> addProduct(@Valid @RequestBody ProductDto productDto) {
-        return ResponseEntity.ok(productService.addProduct(productDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.addProduct(productDto));
     }
 
     @GetMapping("/{id}")
@@ -36,7 +37,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ProductDto> updateProduct(@PathVariable UUID id, @Valid @RequestBody ProductDto productDto) {
         return ResponseEntity.ok(productService.updateProduct(id, productDto));
     }
@@ -44,5 +45,10 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ProductDto> deleteProduct(@PathVariable UUID id) {
         return ResponseEntity.ok(productService.deleteProduct(id));
+    }
+
+    @GetMapping("/category")
+    public ResponseEntity<List<ProductDto>> getProductsByCategory(@RequestParam String categoryName) {
+        return ResponseEntity.ok(productService.findByCategoryName(categoryName));
     }
 }

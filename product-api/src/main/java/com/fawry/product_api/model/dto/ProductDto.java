@@ -1,6 +1,7 @@
 package com.fawry.product_api.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
@@ -12,7 +13,7 @@ public class ProductDto {
 
     private String description;
 
-    @NotBlank(message = "Price is required")
+    @NotNull
     @Positive(message = "Price must be positive")
     private double price;
 }

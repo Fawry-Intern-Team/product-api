@@ -17,4 +17,9 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Query("SELECT p FROM Product p WHERE p.price BETWEEN :minPrice AND :maxPrice")
     List<Product> findByPriceBetween(@Param("minPrice") double minPrice, @Param("maxPrice") double maxPrice);
 
+    @Query(value = "SELECT * FROM products WHERE " +
+            "to_tsvector('english', product_name || ' ' || description) @@ plainto_tsquery('english', :keyword)",
+            nativeQuery = true)
+    List<Product> searchProducts(@Param("keyword") String keyword);
+
 }

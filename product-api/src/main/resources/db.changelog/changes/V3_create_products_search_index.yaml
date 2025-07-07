@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: Ahmed Radwan
+      changes:
+        - sql:
+            sql: |
+              CREATE INDEX products_search_idx
+              ON products
+              USING gin(to_tsvector('english', product_name || ' ' || description));

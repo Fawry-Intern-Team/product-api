@@ -107,4 +107,16 @@ public class ProductServiceImpl implements ProductService {
         List<Product> productsList = productRepository.findByPriceBetween(minPrice, maxPrice);
         return productMapper.toDtoList(productsList);
     }
+
+    @Override
+    public List<ProductDto> searchProducts(String keyword) {
+        log.info("Searching products with keyword: {}", keyword);
+        List<Product> productsList = productRepository.searchProducts(keyword);
+        if (productsList.isEmpty()) {
+            log.warn("No products found for keyword: {}", keyword);
+        } else {
+            log.info("Found {} products for keyword: {}", productsList.size(), keyword);
+        }
+        return productMapper.toDtoList(productsList);
+    }
 }

@@ -1,0 +1,80 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Ahmed Radwan
+      changes:
+        - createTable:
+            tableName: categories
+            columns:
+              - column:
+                  name: category_id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: category_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: description
+                  type: TEXT
+
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: product_id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: product_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: product_price
+                  type: float
+                  constraints:
+                    nullable: false
+              - column:
+                  name: img_url
+                  type: TEXT
+              - column:
+                  name: stock_quantity
+                  type: int
+              - column:
+                  name: category_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_products_category
+                    references: categories(category_id)
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted_at
+                  type: timestamp with time zone
+              - column:
+                  name: is_deleted
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

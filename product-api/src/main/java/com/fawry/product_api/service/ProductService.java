@@ -19,4 +19,6 @@ public interface ProductService {
     List<ProductDto> findByCategoryName(String categoryName);
 
     List<ProductDto> getProductsByPriceRange(double minPrice, double maxPrice);
+
+    List<ProductDto> searchProducts(String keyword);
 }

@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: Ahmed Radwan
+      changes:
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: category_id
+                  value: 123e4567-e89b-12d3-a456-426614174000
+              - column:
+                  name: category_name
+                  value: Electronics
+              - column:
+                  name: description
+                  value: All electronic items
+
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: product_id
+                  value: 223e4567-e89b-12d3-a456-426614174001
+              - column:
+                  name: product_name
+                  value: Samsung TV
+              - column:
+                  name: description
+                  value: Smart TV 55 inch
+              - column:
+                  name: product_price
+                  value: 10999.99
+              - column:
+                  name: img_url
+                  value: http://example.com/samsung_tv.jpg
+              - column:
+                  name: stock_quantity
+                  value: 10
+              - column:
+                  name: category_id
+                  value: 123e4567-e89b-12d3-a456-426614174000

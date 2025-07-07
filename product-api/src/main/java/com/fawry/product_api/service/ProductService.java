@@ -21,4 +21,8 @@ public interface ProductService {
     List<ProductDto> getProductsByPriceRange(double minPrice, double maxPrice);
 
     List<ProductDto> searchProducts(String keyword);
+
+    List<String> getSearchSuggestions(String partial);
+
+    List<ProductDto> getAllProductsWithPagination(int page, int size);
 }

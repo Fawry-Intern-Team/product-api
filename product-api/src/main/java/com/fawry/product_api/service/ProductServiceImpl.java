@@ -9,6 +9,9 @@ import com.fawry.product_api.repository.CategoryRepository;
 import com.fawry.product_api.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -118,5 +121,28 @@ public class ProductServiceImpl implements ProductService {
             log.info("Found {} products for keyword: {}", productsList.size(), keyword);
         }
         return productMapper.toDtoList(productsList);
+    }
+
+    @Override
+    public List<String> getSearchSuggestions(String partial) {
+        log.info("Fetching search suggestions for partial: {}", partial);
+        List<String> suggestions = productRepository.getSearchSuggestions(partial);
+        if (suggestions.isEmpty()) {
+            log.warn("No search suggestions found for partial: {}", partial);
+        } else {
+            log.info("Found {} search suggestions for partial: {}", suggestions.size(), partial);
+        }
+        return suggestions;
+    }
+
+    @Override
+    public List<ProductDto> getAllProductsWithPagination(int page, int size) {
+        log.info("Fetching all products with pagination, page: {}, size: {}", page, size);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        log.info("Total products found: {}", productPage.getTotalElements());
+
+        return productMapper.toDtoList(productPage.getContent());
     }
 }

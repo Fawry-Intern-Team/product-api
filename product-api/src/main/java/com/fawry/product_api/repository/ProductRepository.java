@@ -1,6 +1,7 @@
 package com.fawry.product_api.repository;
 
 import com.fawry.product_api.model.entity.Product;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,5 +22,10 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
             "to_tsvector('english', product_name || ' ' || description) @@ plainto_tsquery('english', :keyword)",
             nativeQuery = true)
     List<Product> searchProducts(@Param("keyword") String keyword);
+
+    @Query(value = "SELECT DISTINCT product_name FROM products WHERE " +
+            "to_tsvector('english', product_name) @@ plainto_tsquery('english', :partial)",
+            nativeQuery = true)
+    List<String> getSearchSuggestions(@Param("partial") String partial);
 
 }

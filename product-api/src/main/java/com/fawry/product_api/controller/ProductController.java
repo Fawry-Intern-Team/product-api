@@ -70,4 +70,16 @@ public class ProductController {
     public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam String keyword) {
         return ResponseEntity.ok(productService.searchProducts(keyword));
     }
+
+    @GetMapping("/suggestions")
+    public ResponseEntity<List<String>> getSearchSuggestions(@RequestParam String partial) {
+        return ResponseEntity.ok(productService.getSearchSuggestions(partial));
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<List<ProductDto>> getAllProductsWithPagination(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(productService.getAllProductsWithPagination(page, size));
+    }
 }

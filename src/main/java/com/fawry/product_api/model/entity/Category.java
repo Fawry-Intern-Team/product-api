@@ -19,14 +19,12 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "UUID", name = "category_id")
-    private UUID id;  // Changed from String to UUID
+    private UUID id;
 
     @Column(name = "category_name", nullable = false, length = 100, unique = true)
-//    @FullTextField(analyzer = "standard")
-//    @KeywordField(name = "name_sort")
     private String name;
 
-//    @FullTextField(analyzer = "standard")
+    @Column(name = "category_description", columnDefinition = "TEXT")
     private String description;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

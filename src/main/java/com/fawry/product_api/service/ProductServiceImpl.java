@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -144,5 +145,18 @@ public class ProductServiceImpl implements ProductService {
         log.info("Total products found: {}", productPage.getTotalElements());
 
         return productMapper.toDtoList(productPage.getContent());
+    }
+
+    @Override
+    public List<ProductDto> getAllProductsSorted(String sortBy, String sortDirection, int page, int size) {
+        log.info("Fetching all products sorted by {}, direction: {}, page: {}, size: {}", sortBy, sortDirection, page, size);
+        Pageable pageable = PageRequest.of(page, size, "asc".equalsIgnoreCase(sortDirection) ?
+                Sort.by(sortBy).ascending() : Sort.by(sortBy).descending());
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        log.info("Total products found: {}", productPage.getTotalElements());
+
+        return productMapper.toDtoList(productPage.getContent());
+
     }
 }

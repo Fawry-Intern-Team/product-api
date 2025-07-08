@@ -25,4 +25,6 @@ public interface ProductService {
     List<String> getSearchSuggestions(String partial);
 
     List<ProductDto> getAllProductsWithPagination(int page, int size);
+
+    List<ProductDto> getAllProductsSorted(String sortBy, String sortDirection, int page, int size);
 }

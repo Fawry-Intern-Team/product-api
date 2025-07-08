@@ -1,15 +1,10 @@
 package com.fawry.product_api.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fawry.product_api.model.entity.Category;
-import jakarta.persistence.ForeignKey;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor

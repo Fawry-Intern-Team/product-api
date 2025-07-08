@@ -82,4 +82,14 @@ public class ProductController {
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(productService.getAllProductsWithPagination(page, size));
     }
+
+    @GetMapping("/sort")
+    public ResponseEntity<List<ProductDto>> getAllProductsSorted(
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(productService.getAllProductsSorted(sortBy, sortDirection, page, size));
+    }
+
 }

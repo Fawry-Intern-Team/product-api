@@ -24,7 +24,7 @@ This service manages **products** and **categories** for the e-commerce system. 
 ### 🔍 Product Search & Filtering
 
 | Method | Endpoint                                                                     | Description                                                          |
-| ------ | -----------------------------------------------------------------------------| ---------------------------------------------------------------------|
+| ------ | ---------------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | `GET`  | `/product/category?categoryName={name}`                                      | **Get products by category name**                                    |
 | `GET`  | `/product/price?minPrice={min}&maxPrice={max}`                               | **Get products within a price range**                                |
 | `GET`  | `/product/search?keyword={keyword}`                                          | **Search products by keyword**                                       |

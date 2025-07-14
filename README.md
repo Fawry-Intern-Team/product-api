@@ -23,14 +23,15 @@ This service manages **products** and **categories** for the e-commerce system. 
 
 ### 🔍 Product Search & Filtering
 
-| Method | Endpoint                                       | Description                                                     |
-| ------ | ---------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------- |
-| `GET`  | `/product/category?categoryName={name}`        | **Get products by category name**                               |
-| `GET`  | `/product/price?minPrice={min}&maxPrice={max}` | **Get products within a price range**                           |
-| `GET`  | `/product/search?keyword={keyword}`            | **Search products by keyword**                                  |
-| `GET`  | `/product/suggestions?partial={partialWord}`   | **Get search suggestions for auto-complete**                    |
-| `GET`  | `/product/page?page={page}&size={size}`        | **Get products with pagination** <br> Defaults: page=0, size=10 |
-| `GET`  | `/product/sort?sortBy={field}&direction={asc   | desc}`                                                          | **Sort products by field** <br> Defaults: sortBy=name, direction=asc |
+| Method | Endpoint                                            | Description                                                          |
+| ------ | ----------------------------------------------      | ---------------------------------------------------------------      |
+| `GET`  | `/product/category?categoryName={name}`             | **Get products by category name**                                    |
+| `GET`  | `/product/price?minPrice={min}&maxPrice={max}`      | **Get products within a price range**                                |
+| `GET`  | `/product/search?keyword={keyword}`                 | **Search products by keyword**                                       |
+| `GET`  | `/product/suggestions?partial={partialWord}`        | **Get search suggestions for auto-complete**                         |
+| `GET`  | `/product/page?page={page}&size={size}`             | **Get products with pagination** <br> Defaults: page=0, size=10      |
+| `GET`  | `/product/sort?sortBy={field}&direction={asc|desc}` | **Sort products by field** <br> Defaults: sortBy=name, direction=asc |
+
 
 ---
 

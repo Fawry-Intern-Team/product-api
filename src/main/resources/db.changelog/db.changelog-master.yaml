@@ -1,7 +1,11 @@
 databaseChangeLog:
   - include:
+      file: db.changelog/changes/V0_enable_uuid_extension.yaml
+  - include:
       file: db.changelog/changes/V1_create_tables.yaml
   - include:
       file: db.changelog/changes/V2_insert_initial_data.yaml
   - include:
       file: db.changelog/changes/V3_create_products_search_index.yaml
+  - include:
+      file: db.changelog/changes/V4_insert_sample_products.yaml

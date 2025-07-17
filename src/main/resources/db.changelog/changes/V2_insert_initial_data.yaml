@@ -8,20 +8,33 @@ databaseChangeLog:
             columns:
               - column:
                   name: category_id
-                  value: 123e4567-e89b-12d3-a456-426614174000
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: category_name
+                  value: Clothes
+              - column:
+                  name: category_description
+                  value: All clothing products
+
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: category_id
+                  valueComputed: uuid_generate_v4()
               - column:
                   name: category_name
                   value: Electronics
               - column:
-                  name: description
-                  value: All electronic items
+                  name: category_description
+                  value: Electronic devices and accessories
 
         - insert:
             tableName: products
             columns:
               - column:
                   name: product_id
-                  value: 223e4567-e89b-12d3-a456-426614174001
+                  valueComputed: uuid_generate_v4()
               - column:
                   name: product_name
                   value: Samsung TV
@@ -33,10 +46,35 @@ databaseChangeLog:
                   value: 10999.99
               - column:
                   name: img_url
-                  value: http://example.com/samsung_tv.jpg
+                  value: https://th.bing.com/th/id/OIP.BJb2E-dK4ff9DnbdqLJQlQHaE6?w=281&h=186&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3
+              - column:
+                  name: category_id
+                  valueComputed: (SELECT category_id FROM categories WHERE category_name = 'Electronics')
               - column:
                   name: stock_quantity
                   value: 10
+
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: product_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: product_name
+                  value: Cotton T-shirt
+              - column:
+                  name: description
+                  value: High quality cotton T-shirt
+              - column:
+                  name: product_price
+                  value: 250
+              - column:
+                  name: img_url
+                  value: https://th.bing.com/th/id/OIP.0CaPLGM27FC_7zer8Bl4sgHaG8?w=211&h=197&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3
               - column:
                   name: category_id
-                  value: 123e4567-e89b-12d3-a456-426614174000
+                  valueComputed: (SELECT category_id FROM categories WHERE category_name = 'Clothes')
+              - column:
+                  name: stock_quantity
+                  value: 50

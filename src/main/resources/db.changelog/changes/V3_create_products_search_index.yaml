@@ -2,8 +2,14 @@ databaseChangeLog:
   - changeSet:
       id: 3
       author: Ahmed Radwan
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: products
       changes:
         - sql:
+            splitStatements: false
+            stripComments: true
             sql: |
               CREATE INDEX products_search_idx
               ON products

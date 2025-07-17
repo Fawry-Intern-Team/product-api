@@ -1,0 +1,129 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: Ahmed Radwan
+      changes:
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: product_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: product_name
+                  value: "T-Shirt"
+              - column:
+                  name: description
+                  value: "Comfortable cotton t-shirt"
+              - column:
+                  name: product_price
+                  valueNumeric: 199.99
+              - column:
+                  name: img_url
+                  value: "https://th.bing.com/th/id/OIF.W0SfO4KbHDuvRBAgkrWhvQ?w=196&h=196&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3"
+              - column:
+                  name: category_id
+                  valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
+              - column:
+                  name: stock_quantity
+                  valueNumeric: 100
+
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: product_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: product_name
+                  value: "Jeans"
+              - column:
+                  name: description
+                  value: "Blue slim-fit jeans"
+              - column:
+                  name: product_price
+                  valueNumeric: 399.99
+              - column:
+                  name: img_url
+                  value: "https://th.bing.com/th/id/OIF.W0SfO4KbHDuvRBAgkrWhvQ?w=196&h=196&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3"
+              - column:
+                  name: category_id
+                  valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
+              - column:
+                  name: stock_quantity
+                  valueNumeric: 70
+
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: product_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: product_name
+                  value: "Hoodie"
+              - column:
+                  name: description
+                  value: "Warm fleece hoodie"
+              - column:
+                  name: product_price
+                  valueNumeric: 299.99
+              - column:
+                  name: img_url
+                  value: "https://th.bing.com/th/id/OIF.W0SfO4KbHDuvRBAgkrWhvQ?w=196&h=196&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3"
+              - column:
+                  name: category_id
+                  valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
+              - column:
+                  name: stock_quantity
+                  valueNumeric: 50
+
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: product_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: product_name
+                  value: "Sneakers"
+              - column:
+                  name: description
+                  value: "Stylish running sneakers"
+              - column:
+                  name: product_price
+                  valueNumeric: 599.99
+              - column:
+                  name: img_url
+                  value: "https://th.bing.com/th/id/OIF.W0SfO4KbHDuvRBAgkrWhvQ?w=196&h=196&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3"
+              - column:
+                  name: category_id
+                  valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
+              - column:
+                  name: stock_quantity
+                  valueNumeric: 80
+
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: product_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: product_name
+                  value: "Cap"
+              - column:
+                  name: description
+                  value: "Adjustable baseball cap"
+              - column:
+                  name: product_price
+                  valueNumeric: 99.99
+              - column:
+                  name: img_url
+                  value: "https://th.bing.com/th/id/OIF.W0SfO4KbHDuvRBAgkrWhvQ?w=196&h=196&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3"
+              - column:
+                  name: category_id
+                  valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
+              - column:
+                  name: stock_quantity
+                  valueNumeric: 120

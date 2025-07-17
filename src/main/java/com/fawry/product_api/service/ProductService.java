@@ -1,18 +1,19 @@
 package com.fawry.product_api.service;
 
 import com.fawry.product_api.model.dto.ProductDto;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface ProductService {
-    ProductDto addProduct(ProductDto productDto);
+    ProductDto addProduct(@Valid ProductDto productDto);
 
     ProductDto getProductById(UUID id);
 
     List<ProductDto> getAllProducts();
 
-    ProductDto updateProduct(UUID id, ProductDto productDto);
+    ProductDto updateProduct(UUID id, @Valid ProductDto productDto);
 
     ProductDto deleteProduct(UUID id);
 

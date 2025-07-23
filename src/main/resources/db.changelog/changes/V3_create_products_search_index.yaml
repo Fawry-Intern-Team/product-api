@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: Ahmed Radwan
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: products
+      changes:
+        - sql:
+            splitStatements: false
+            stripComments: true
+            sql: |
+              CREATE INDEX products_search_idx
+              ON products
+              USING gin(to_tsvector('english', product_name || ' ' || description));

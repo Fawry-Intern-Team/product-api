@@ -1,9 +1,12 @@
 package com.fawry.product_api.controller;
 
+import com.fawry.product_api.mapper.PaginatedResponseMapper;
+import com.fawry.product_api.mapper.PaginatedResponseMapperImpl;
+import com.fawry.product_api.model.dto.PaginatedResponseDto;
 import com.fawry.product_api.model.dto.ProductDto;
 import com.fawry.product_api.service.ProductService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +19,13 @@ import java.util.UUID;
 public class ProductController {
 
     private final ProductService productService;
+    private final PaginatedResponseMapper paginatedResponseMapper;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService,
+                             PaginatedResponseMapper paginatedResponseMapper){
         this.productService = productService;
+        this.paginatedResponseMapper = paginatedResponseMapper;
     }
 
     /******************************************************************************************************/
@@ -37,8 +43,10 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<Page<ProductDto>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(productService.getAllProductsWithPagination(page, size));
     }
 
     @PutMapping("/{id}")
@@ -56,19 +64,37 @@ public class ProductController {
     /******************************************************************************************************/
 
     @GetMapping("/category")
-    public ResponseEntity<List<ProductDto>> getProductsByCategory(@RequestParam String categoryName) {
-        return ResponseEntity.ok(productService.findByCategoryName(categoryName));
+    public ResponseEntity<PaginatedResponseDto<ProductDto>> getProductsByCategory(
+            @RequestParam String categoryName,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<ProductDto> productPage = productService.findByCategoryName(categoryName, page, size);
+        PaginatedResponseDto<ProductDto> response = paginatedResponseMapper.toPaginatedResponse(productPage);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/price")
-    public ResponseEntity<List<ProductDto>> getProductsByPriceRange(@RequestParam double minPrice,
-                                                                    @RequestParam double maxPrice) {
-        return ResponseEntity.ok(productService.getProductsByPriceRange(minPrice, maxPrice));
+    public ResponseEntity<PaginatedResponseDto<ProductDto>> getProductsByPriceRange(
+            @RequestParam double minPrice,
+            @RequestParam double maxPrice,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<ProductDto> productPage = productService.getProductsByPriceRange(minPrice, maxPrice, page, size);
+        PaginatedResponseDto<ProductDto> response = paginatedResponseMapper.toPaginatedResponse(productPage);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam String keyword) {
-        return ResponseEntity.ok(productService.searchProducts(keyword));
+    public ResponseEntity<PaginatedResponseDto<ProductDto>> searchProducts(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<ProductDto> productPage = productService.searchProducts(keyword, page, size);
+        PaginatedResponseDto<ProductDto> response = paginatedResponseMapper.toPaginatedResponse(productPage);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/suggestions")
@@ -76,20 +102,16 @@ public class ProductController {
         return ResponseEntity.ok(productService.getSearchSuggestions(partial));
     }
 
-    @GetMapping("/page")
-    public ResponseEntity<List<ProductDto>> getAllProductsWithPagination(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(productService.getAllProductsWithPagination(page, size));
-    }
-
     @GetMapping("/sort")
-    public ResponseEntity<List<ProductDto>> getAllProductsSorted(
+    public ResponseEntity<PaginatedResponseDto<ProductDto>> getAllProductsSorted(
             @RequestParam(defaultValue = "name") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(productService.getAllProductsSorted(sortBy, sortDirection, page, size));
+
+        Page<ProductDto> productPage = productService.getAllProductsSorted(sortBy, sortDirection, page, size);
+        PaginatedResponseDto<ProductDto> response = paginatedResponseMapper.toPaginatedResponse(productPage);
+        return ResponseEntity.ok(response);
     }
 
 }

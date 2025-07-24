@@ -2,6 +2,7 @@ package com.fawry.product_api.service;
 
 import com.fawry.product_api.model.dto.ProductDto;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,21 +12,19 @@ public interface ProductService {
 
     ProductDto getProductById(UUID id);
 
-    List<ProductDto> getAllProducts();
-
     ProductDto updateProduct(UUID id, @Valid ProductDto productDto);
 
     ProductDto deleteProduct(UUID id);
 
-    List<ProductDto> findByCategoryName(String categoryName);
+    Page<ProductDto> findByCategoryName(String categoryName, int page, int size);
 
-    List<ProductDto> getProductsByPriceRange(double minPrice, double maxPrice);
+    Page<ProductDto> getProductsByPriceRange(double minPrice, double maxPrice, int page, int size);
 
-    List<ProductDto> searchProducts(String keyword);
+    Page<ProductDto> searchProducts(String keyword, int page, int size);
 
     List<String> getSearchSuggestions(String partial);
 
-    List<ProductDto> getAllProductsWithPagination(int page, int size);
+    Page<ProductDto> getAllProductsWithPagination(int page, int size);
 
-    List<ProductDto> getAllProductsSorted(String sortBy, String sortDirection, int page, int size);
+    Page<ProductDto> getAllProductsSorted(String sortBy, String sortDirection, int page, int size);
 }

@@ -71,7 +71,7 @@ databaseChangeLog:
                   value: 250
               - column:
                   name: img_url
-                  value: https://th.bing.com/th/id/OIP.0CaPLGM27FC_7zer8Bl4sgHaG8?w=211&h=197&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3
+                  value: https://uniform7-static.myshopblocks.com/images/2021/06/contain/2048x2048/849abe0ad9018dea67f10859c59eef78.jpg
               - column:
                   name: category_id
                   valueComputed: (SELECT category_id FROM categories WHERE category_name = 'Clothes')

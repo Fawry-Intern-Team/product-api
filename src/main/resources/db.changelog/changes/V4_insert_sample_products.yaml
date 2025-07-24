@@ -20,7 +20,7 @@ databaseChangeLog:
                   valueNumeric: 199.99
               - column:
                   name: img_url
-                  value: "https://th.bing.com/th/id/OIF.W0SfO4KbHDuvRBAgkrWhvQ?w=196&h=196&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3"
+                  value: https://i5.walmartimages.com/seo/Tanjiro-design-T-shirt-Heavy-cotton-T-shirt-casual-street-wear-tee-Casual-loose-fit-teeshirt-anime-graphic-tshirt-men-s-women-s-all-sizes_b6eb6e36-5e21-4d5a-9566-3d1b89147899.1c8c5aa04b3044039b90ccfd6f6ebede.jpeg
               - column:
                   name: category_id
                   valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
@@ -45,7 +45,7 @@ databaseChangeLog:
                   valueNumeric: 399.99
               - column:
                   name: img_url
-                  value: "https://th.bing.com/th/id/OIF.W0SfO4KbHDuvRBAgkrWhvQ?w=196&h=196&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3"
+                  value: https://branddrops.in/cdn/shop/files/IMG_1169.png?v=1752910869&width=940
               - column:
                   name: category_id
                   valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
@@ -70,7 +70,7 @@ databaseChangeLog:
                   valueNumeric: 299.99
               - column:
                   name: img_url
-                  value: "https://th.bing.com/th/id/OIF.W0SfO4KbHDuvRBAgkrWhvQ?w=196&h=196&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3"
+                  value: https://tse2.mm.bing.net/th/id/OIP.FKdB7MA0egDhKdqYCBAFuQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3
               - column:
                   name: category_id
                   valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
@@ -95,7 +95,7 @@ databaseChangeLog:
                   valueNumeric: 599.99
               - column:
                   name: img_url
-                  value: "https://th.bing.com/th/id/OIF.W0SfO4KbHDuvRBAgkrWhvQ?w=196&h=196&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3"
+                  value: https://tse3.mm.bing.net/th/id/OIP.MzAHXAdnhppihOLqt1epfAHaGa?rs=1&pid=ImgDetMain&o=7&rm=3
               - column:
                   name: category_id
                   valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
@@ -120,10 +120,135 @@ databaseChangeLog:
                   valueNumeric: 99.99
               - column:
                   name: img_url
-                  value: "https://th.bing.com/th/id/OIF.W0SfO4KbHDuvRBAgkrWhvQ?w=196&h=196&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3"
+                  value: https://tse1.mm.bing.net/th/id/OIP.a5r9stU0EDywEL8qCBNbYQHaEy?rs=1&pid=ImgDetMain&o=7&rm=3
               - column:
                   name: category_id
                   valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
               - column:
                   name: stock_quantity
                   valueNumeric: 120
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: product_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: product_name
+                  value: "Jacket"
+              - column:
+                  name: description
+                  value: "Stylish denim jacket"
+              - column:
+                  name: product_price
+                  valueNumeric: 499.99
+              - column:
+                  name: img_url
+                  value: https://tse4.mm.bing.net/th/id/OIP.crtYzLlhgZhffaLTJ4dCsAHaH9?rs=1&pid=ImgDetMain&o=7&rm=3
+              - column:
+                  name: category_id
+                  valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
+              - column:
+                  name: stock_quantity
+                  valueNumeric: 60
+
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: product_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: product_name
+                  value: "Sweater"
+              - column:
+                  name: description
+                  value: "Wool knit sweater"
+              - column:
+                  name: product_price
+                  valueNumeric: 249.99
+              - column:
+                  name: img_url
+                  value: https://tse3.mm.bing.net/th/id/OIP.HJZInMy-gOYqZRGEXLVkqgHaJ4?rs=1&pid=ImgDetMain&o=7&rm=3
+              - column:
+                  name: category_id
+                  valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
+              - column:
+                  name: stock_quantity
+                  valueNumeric: 90
+
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: product_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: product_name
+                  value: "Shorts"
+              - column:
+                  name: description
+                  value: "Casual cotton shorts"
+              - column:
+                  name: product_price
+                  valueNumeric: 149.99
+              - column:
+                  name: img_url
+                  value: https://th.bing.com/th/id/R.3ea247ea2aac63e3f83fe7029cae702b?rik=0mMpgtLOhC8cxQ&riu=http%3a%2f%2fwww.jockey.in%2fcdn%2fshop%2fproducts%2fCG02_ASSTD_0105_S123_JKY_1_49e75abc-82ba-4dbd-86a7-e461a6524ac9.webp%3fv%3d1700001772&ehk=qje6xa4lGHlKeh3WNFFxCpcaIbbKknl82B1%2brP19BF0%3d&risl=&pid=ImgRaw&r=0
+              - column:
+                  name: category_id
+                  valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
+              - column:
+                  name: stock_quantity
+                  valueNumeric: 110
+
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: product_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: product_name
+                  value: "Scarf"
+              - column:
+                  name: description
+                  value: "Warm woolen scarf"
+              - column:
+                  name: product_price
+                  valueNumeric: 89.99
+              - column:
+                  name: img_url
+                  value: https://tse1.mm.bing.net/th/id/OIP.wPO8egDNZJ03l-_HUbYLBAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3
+              - column:
+                  name: category_id
+                  valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
+              - column:
+                  name: stock_quantity
+                  valueNumeric: 130
+
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: product_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: product_name
+                  value: "Socks"
+              - column:
+                  name: description
+                  value: "Pack of 5 cotton socks"
+              - column:
+                  name: product_price
+                  valueNumeric: 59.99
+              - column:
+                  name: img_url
+                  value: https://tse1.mm.bing.net/th/id/OIP.4v996Nq34oxUSt9UuQJR6AHaHa?rs=1&pid=ImgDetMain&o=7&rm=3
+              - column:
+                  name: category_id
+                  valueComputed: "(SELECT category_id FROM categories WHERE category_name='Clothes')"
+              - column:
+                  name: stock_quantity
+                  valueNumeric: 150
+

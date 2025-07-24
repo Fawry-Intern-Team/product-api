@@ -61,14 +61,6 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.toDto(existingProduct);
     }
 
-    @Override
-    public List<ProductDto> getAllProducts() {
-        log.info("Fetching all products from database");
-        List<Product> products = productRepository.findAll();
-        log.info("Total products found: {}", products.size());
-
-        return productMapper.toDtoList(products);
-    }
 
     @Override
     public ProductDto updateProduct(UUID id, ProductDto productDto) {
@@ -99,29 +91,38 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> findByCategoryName(String categoryName) {
+    public Page<ProductDto> findByCategoryName(String categoryName, int page, int size) {
         log.info("Fetching products by category name: {}", categoryName);
-        List<Product> productsList = productRepository.findByCategoryName(categoryName);
-        return productMapper.toDtoList(productsList);
+        Category category = categoryRepository.findByName(categoryName)
+                .orElseThrow(() -> new RuntimeException("Category not found with name: " + categoryName));
+
+        Page<Product> productsPage =
+                productRepository.findByCategoryName(category.getName(), PageRequest.of(page, size));
+        log.info("Total products found in category '{}': {}", categoryName, productsPage.getTotalElements());
+
+        return productsPage.map(productMapper::toDto);
     }
 
     @Override
-    public List<ProductDto> getProductsByPriceRange(double minPrice, double maxPrice) {
+    public Page<ProductDto> getProductsByPriceRange(double minPrice, double maxPrice, int page, int size) {
         log.info("Fetching products by price range: {} - {}", minPrice, maxPrice);
-        List<Product> productsList = productRepository.findByPriceBetween(minPrice, maxPrice);
-        return productMapper.toDtoList(productsList);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productsPage = productRepository.findByPriceBetween(minPrice, maxPrice, pageable);
+
+        log.info("Total products found in price range {} - {}: {}", minPrice, maxPrice, productsPage.getTotalElements());
+
+        return productsPage.map(productMapper::toDto);
     }
 
     @Override
-    public List<ProductDto> searchProducts(String keyword) {
+    public Page<ProductDto> searchProducts(String keyword,int page, int size) {
         log.info("Searching products with keyword: {}", keyword);
-        List<Product> productsList = productRepository.searchProducts(keyword);
-        if (productsList.isEmpty()) {
-            log.warn("No products found for keyword: {}", keyword);
-        } else {
-            log.info("Found {} products for keyword: {}", productsList.size(), keyword);
-        }
-        return productMapper.toDtoList(productsList);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productsPage = productRepository.searchProducts(keyword, pageable);
+
+        log.info("Total products found for keyword '{}': {}", keyword, productsPage.getTotalElements());
+
+        return productsPage.map(productMapper::toDto);
     }
 
     @Override
@@ -137,26 +138,25 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> getAllProductsWithPagination(int page, int size) {
+    public Page<ProductDto> getAllProductsWithPagination(int page, int size) {
         log.info("Fetching all products with pagination, page: {}, size: {}", page, size);
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> productPage = productRepository.findAll(pageable);
 
         log.info("Total products found: {}", productPage.getTotalElements());
 
-        return productMapper.toDtoList(productPage.getContent());
+        return productPage.map(productMapper::toDto);
     }
 
     @Override
-    public List<ProductDto> getAllProductsSorted(String sortBy, String sortDirection, int page, int size) {
+    public Page<ProductDto> getAllProductsSorted(String sortBy, String sortDirection, int page, int size) {
         log.info("Fetching all products sorted by {}, direction: {}, page: {}, size: {}", sortBy, sortDirection, page, size);
-        Pageable pageable = PageRequest.of(page, size, "asc".equalsIgnoreCase(sortDirection) ?
-                Sort.by(sortBy).ascending() : Sort.by(sortBy).descending());
+        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         Page<Product> productPage = productRepository.findAll(pageable);
 
         log.info("Total products found: {}", productPage.getTotalElements());
 
-        return productMapper.toDtoList(productPage.getContent());
-
+        return productPage.map(productMapper::toDto);
     }
 }

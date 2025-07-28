@@ -2,6 +2,7 @@ package com.fawry.product_api.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "products")
@@ -39,20 +41,6 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-
-    @Column(name = "stock_quantity")
-    private Integer stockQuantity = 0;
-
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false, nullable = false)
-    private Instant createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
-
-    @Column(name = "deleted_at")
-    private Instant deletedAt;
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;

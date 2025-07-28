@@ -1,5 +1,6 @@
 package com.fawry.product_api.service;
 
+import com.fawry.product_api.external.store.StoreProductResponse;
 import com.fawry.product_api.model.dto.ProductDto;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -16,9 +17,9 @@ public interface ProductService {
 
     ProductDto deleteProduct(UUID id);
 
-    Page<ProductDto> getAllProductsWithPagination(int page, int size);
+    Page<ProductDto> getAllProducts(int page, int size);
 
-    List<ProductDto> getProductsByIds(List<UUID> productIds);
+    List<StoreProductResponse> fetchProductDetailsWithStore(List<UUID> productIds);
 
     List<String> getSearchSuggestions(String partial);
 

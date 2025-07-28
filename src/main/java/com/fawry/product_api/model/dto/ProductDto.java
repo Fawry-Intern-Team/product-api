@@ -25,9 +25,6 @@ public class ProductDto {
     @NotBlank(message = "Image URL is required")
     private String imageUrl;
 
-    @Min(value = 0, message = "Stock quantity must be a positive number or zero")
-    private Integer stockQuantity = 0;
-
     @NotBlank(message = "Category is required")
     private String categoryName;
 }

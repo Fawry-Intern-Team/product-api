@@ -1,5 +1,6 @@
 package com.fawry.product_api.controller;
 
+import com.fawry.product_api.external.store.StoreProductResponse;
 import com.fawry.product_api.model.dto.ProductDto;
 import com.fawry.product_api.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +41,7 @@ public class ProductController {
     public ResponseEntity<Page<ProductDto>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(productService.getAllProductsWithPagination(page, size));
-    }
-
-    @PostMapping("/by-ids")
-    public ResponseEntity<List<ProductDto>> getProductsByIds(@RequestBody List<UUID> productIds) {
-        List<ProductDto> products = productService.getProductsByIds(productIds);
-        return ResponseEntity.ok(products);
+        return ResponseEntity.ok(productService.getAllProducts(page, size));
     }
 
     @PutMapping("/{id}")
@@ -84,5 +79,16 @@ public class ProductController {
 
         return ResponseEntity.ok(products);
     }
+
+
+    /******************************************************************************************************/
+    /********************************* Product Store Integration Endpoints ********************************/
+    /******************************************************************************************************/
+
+    @PostMapping("/with-store")
+    public List<StoreProductResponse> getProductsWithStore(@RequestBody List<UUID> productIds) {
+        return productService.fetchProductDetailsWithStore(productIds);
+    }
+
 
 }

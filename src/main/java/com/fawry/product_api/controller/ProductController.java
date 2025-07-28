@@ -1,8 +1,5 @@
 package com.fawry.product_api.controller;
 
-import com.fawry.product_api.mapper.PaginatedResponseMapper;
-import com.fawry.product_api.mapper.PaginatedResponseMapperImpl;
-import com.fawry.product_api.model.dto.PaginatedResponseDto;
 import com.fawry.product_api.model.dto.ProductDto;
 import com.fawry.product_api.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +16,10 @@ import java.util.UUID;
 public class ProductController {
 
     private final ProductService productService;
-    private final PaginatedResponseMapper paginatedResponseMapper;
 
     @Autowired
-    public ProductController(ProductService productService,
-                             PaginatedResponseMapper paginatedResponseMapper){
+    public ProductController(ProductService productService){
         this.productService = productService;
-        this.paginatedResponseMapper = paginatedResponseMapper;
     }
 
     /******************************************************************************************************/
@@ -49,6 +43,12 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProductsWithPagination(page, size));
     }
 
+    @PostMapping("/by-ids")
+    public ResponseEntity<List<ProductDto>> getProductsByIds(@RequestBody List<UUID> productIds) {
+        List<ProductDto> products = productService.getProductsByIds(productIds);
+        return ResponseEntity.ok(products);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ProductDto> updateProduct(@PathVariable UUID id, @RequestBody ProductDto productDto) {
         return ResponseEntity.ok(productService.updateProduct(id, productDto));
@@ -63,55 +63,26 @@ public class ProductController {
     /******************************* Product Search and Filtering Endpoints *******************************/
     /******************************************************************************************************/
 
-    @GetMapping("/category")
-    public ResponseEntity<PaginatedResponseDto<ProductDto>> getProductsByCategory(
-            @RequestParam String categoryName,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Page<ProductDto> productPage = productService.findByCategoryName(categoryName, page, size);
-        PaginatedResponseDto<ProductDto> response = paginatedResponseMapper.toPaginatedResponse(productPage);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/price")
-    public ResponseEntity<PaginatedResponseDto<ProductDto>> getProductsByPriceRange(
-            @RequestParam double minPrice,
-            @RequestParam double maxPrice,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Page<ProductDto> productPage = productService.getProductsByPriceRange(minPrice, maxPrice, page, size);
-        PaginatedResponseDto<ProductDto> response = paginatedResponseMapper.toPaginatedResponse(productPage);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<PaginatedResponseDto<ProductDto>> searchProducts(
-            @RequestParam String keyword,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Page<ProductDto> productPage = productService.searchProducts(keyword, page, size);
-        PaginatedResponseDto<ProductDto> response = paginatedResponseMapper.toPaginatedResponse(productPage);
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping("/suggestions")
     public ResponseEntity<List<String>> getSearchSuggestions(@RequestParam String partial) {
         return ResponseEntity.ok(productService.getSearchSuggestions(partial));
     }
 
-    @GetMapping("/sort")
-    public ResponseEntity<PaginatedResponseDto<ProductDto>> getAllProductsSorted(
-            @RequestParam(defaultValue = "name") String sortBy,
+    @GetMapping("/search")
+    public ResponseEntity<Page<ProductDto>> searchProducts(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "0") double min,
+            @RequestParam(defaultValue = "0") double max,
+            @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "12") int size) {
 
-        Page<ProductDto> productPage = productService.getAllProductsSorted(sortBy, sortDirection, page, size);
-        PaginatedResponseDto<ProductDto> response = paginatedResponseMapper.toPaginatedResponse(productPage);
-        return ResponseEntity.ok(response);
+        Page<ProductDto> products = productService.getFilteredProducts(
+                keyword, category, min, max, sortBy, sortDirection, page, size);
+
+        return ResponseEntity.ok(products);
     }
 
 }

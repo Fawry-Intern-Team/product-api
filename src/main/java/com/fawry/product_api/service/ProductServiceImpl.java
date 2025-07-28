@@ -7,16 +7,21 @@ import com.fawry.product_api.model.entity.Category;
 import com.fawry.product_api.model.entity.Product;
 import com.fawry.product_api.repository.CategoryRepository;
 import com.fawry.product_api.repository.ProductRepository;
+import com.fawry.product_api.util.ProductSpecifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+
+import static org.springframework.data.jpa.repository.query.KeysetScrollSpecification.createSort;
 
 @Slf4j
 @Service
@@ -24,16 +29,14 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
-    private final CategoryMapper categoryMapper;
     private final CategoryRepository categoryRepository;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository,
-                              ProductMapper productMapper, CategoryMapper categoryMapper,
-                              CategoryRepository categoryRepository) {
+            ProductMapper productMapper,
+            CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
-        this.categoryMapper = categoryMapper;
         this.categoryRepository = categoryRepository;
     }
 
@@ -54,18 +57,19 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto getProductById(UUID id) {
         log.info("Fetching product from database for id: {}", id);
-        Product existingProduct = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
 
         log.info("Product found: {}", existingProduct.getName());
 
         return productMapper.toDto(existingProduct);
     }
 
-
     @Override
     public ProductDto updateProduct(UUID id, ProductDto productDto) {
         log.info("Fetching product for update with id: {}", id);
-        Product existingProduct = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
 
         productMapper.updateProductFromDto(productDto, existingProduct);
         log.info("Updating product with id: {}", id);
@@ -80,7 +84,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto deleteProduct(UUID id) {
         log.info("Fetching product for deletion with id: {}", id);
-        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
 
         log.info("Deleting product with id: {}", id);
         productRepository.delete(product);
@@ -88,41 +93,6 @@ public class ProductServiceImpl implements ProductService {
 
         return productMapper.toDto(product);
 
-    }
-
-    @Override
-    public Page<ProductDto> findByCategoryName(String categoryName, int page, int size) {
-        log.info("Fetching products by category name: {}", categoryName);
-        Category category = categoryRepository.findByName(categoryName)
-                .orElseThrow(() -> new RuntimeException("Category not found with name: " + categoryName));
-
-        Page<Product> productsPage =
-                productRepository.findByCategoryName(category.getName(), PageRequest.of(page, size));
-        log.info("Total products found in category '{}': {}", categoryName, productsPage.getTotalElements());
-
-        return productsPage.map(productMapper::toDto);
-    }
-
-    @Override
-    public Page<ProductDto> getProductsByPriceRange(double minPrice, double maxPrice, int page, int size) {
-        log.info("Fetching products by price range: {} - {}", minPrice, maxPrice);
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Product> productsPage = productRepository.findByPriceBetween(minPrice, maxPrice, pageable);
-
-        log.info("Total products found in price range {} - {}: {}", minPrice, maxPrice, productsPage.getTotalElements());
-
-        return productsPage.map(productMapper::toDto);
-    }
-
-    @Override
-    public Page<ProductDto> searchProducts(String keyword,int page, int size) {
-        log.info("Searching products with keyword: {}", keyword);
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Product> productsPage = productRepository.searchProducts(keyword, pageable);
-
-        log.info("Total products found for keyword '{}': {}", keyword, productsPage.getTotalElements());
-
-        return productsPage.map(productMapper::toDto);
     }
 
     @Override
@@ -149,14 +119,72 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDto> getAllProductsSorted(String sortBy, String sortDirection, int page, int size) {
-        log.info("Fetching all products sorted by {}, direction: {}, page: {}, size: {}", sortBy, sortDirection, page, size);
-        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        Page<Product> productPage = productRepository.findAll(pageable);
+    public List<ProductDto> getProductsByIds(List<UUID> productIds) {
+        log.info("Fetching products by IDs: {}", productIds);
+        List<Product> products = productRepository.findAllById(productIds);
+        if (products.isEmpty()) {
+            log.warn("No products found for the provided IDs: {}", productIds);
+        } else {
+            log.info("Found {} products for the provided IDs", products.size());
+        }
+        return productMapper.toDtoList(products);
+    }
 
-        log.info("Total products found: {}", productPage.getTotalElements());
+    public Page<ProductDto> getFilteredProducts(String keyword, String category, double min, double max,
+                                                String sortBy, String sortDirection, int page, int size) {
 
+        // Create specification with all filters
+        Specification<Product> specification = ProductSpecifications.withAllFilters(keyword, category, min, max);
+
+        // Create sort object
+        Sort sort = createSortObject(sortBy, sortDirection);
+
+        // Create pageable object
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        // Execute query with specifications
+        Page<Product> productPage = productRepository.findAll(specification, pageable);
+
+        // Convert to DTO
         return productPage.map(productMapper::toDto);
     }
+
+    private Sort createSortObject(String sortBy, String sortDirection) {
+        // Default values
+        if (sortBy == null || sortBy.trim().isEmpty()) {
+            sortBy = "id";
+        }
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if ("desc".equalsIgnoreCase(sortDirection)) {
+            direction = Sort.Direction.DESC;
+        }
+
+        // Map sort fields
+        String actualSortField;
+        switch (sortBy.toLowerCase()) {
+            case "price":
+                actualSortField = "price";
+                break;
+            case "name":
+                actualSortField = "name";
+                break;
+            case "date":
+            case "created":
+                actualSortField = "createdDate";
+                break;
+            case "popularity":
+                actualSortField = "viewCount";
+                break;
+            case "category":
+                actualSortField = "category.name";
+                break;
+            default:
+                actualSortField = "id";
+                break;
+        }
+
+        return Sort.by(direction, actualSortField);
+    }
+
 }

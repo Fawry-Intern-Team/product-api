@@ -16,15 +16,13 @@ public interface ProductService {
 
     ProductDto deleteProduct(UUID id);
 
-    Page<ProductDto> findByCategoryName(String categoryName, int page, int size);
+    Page<ProductDto> getAllProductsWithPagination(int page, int size);
 
-    Page<ProductDto> getProductsByPriceRange(double minPrice, double maxPrice, int page, int size);
-
-    Page<ProductDto> searchProducts(String keyword, int page, int size);
+    List<ProductDto> getProductsByIds(List<UUID> productIds);
 
     List<String> getSearchSuggestions(String partial);
 
-    Page<ProductDto> getAllProductsWithPagination(int page, int size);
-
-    Page<ProductDto> getAllProductsSorted(String sortBy, String sortDirection, int page, int size);
+    Page<ProductDto> getFilteredProducts(String keyword, String category,
+                                         double minPrice, double maxPrice,
+                                         String sortBy, String sortDirection, int page, int size);
 }

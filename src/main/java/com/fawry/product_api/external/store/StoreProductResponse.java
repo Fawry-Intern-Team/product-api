@@ -14,7 +14,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreProductResponse {
-    private ProductDto product;
+    private UUID productId;
+    private String productName;
+    private String productDescription;
+    private String imageUrl;
+    private Double price;
     private UUID storeId;
     private String storeName;
     private String storeLocation;

@@ -1,8 +1,9 @@
 package com.fawry.product_api.service;
 
+import com.fawry.product_api.external.stock.Stock;
+import com.fawry.product_api.external.store.Store;
 import com.fawry.product_api.external.store.StoreClient;
 import com.fawry.product_api.external.store.StoreProductResponse;
-import com.fawry.product_api.mapper.CategoryMapper;
 import com.fawry.product_api.mapper.ProductMapper;
 import com.fawry.product_api.model.dto.ProductDto;
 import com.fawry.product_api.model.entity.Category;
@@ -12,7 +13,6 @@ import com.fawry.product_api.repository.ProductRepository;
 import com.fawry.product_api.util.ProductSpecifications;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +20,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -122,7 +124,34 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<StoreProductResponse> fetchProductDetailsWithStore(List<UUID> productIds) {
-        return storeClient.getProductsWithStore(productIds);
+        List<List<Stock>> stocks = storeClient.getProductsWithStore(productIds);
+        log.info("Fetched stocks {}: {}", stocks.size(), stocks);
+        List<StoreProductResponse> storeProductResponses = new ArrayList<>();
+        stocks.forEach(stockList -> {
+            stockList.forEach(stock -> {
+                Product product = productRepository.findById(stock.getProductId())
+                        .orElseThrow(() -> new RuntimeException("Product not found with id: " + stock.getProductId()));
+                Store store = storeClient.getStoreById(stock.getStoreId());
+                StoreProductResponse response = getStoreProductResponse(product, store);
+                storeProductResponses.add(response);
+            });
+        });
+
+        return storeProductResponses;
+
+    }
+
+    private static StoreProductResponse getStoreProductResponse(Product product, Store store) {
+        StoreProductResponse response = new StoreProductResponse();
+        response.setProductId(product.getId());
+        response.setProductName(product.getName());
+        response.setProductDescription(product.getDescription());
+        response.setImageUrl(product.getImageUrl());
+        response.setPrice(product.getPrice());
+        response.setStoreId(store.getId());
+        response.setStoreName(store.getName());
+        response.setStoreLocation(store.getLocation());
+        return response;
     }
 
 

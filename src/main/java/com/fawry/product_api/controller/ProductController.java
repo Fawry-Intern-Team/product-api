@@ -32,25 +32,25 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.addProduct(productDto));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable UUID id) {
+    @GetMapping
+    public ResponseEntity<ProductDto> getProductById(@RequestParam UUID id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
-    @GetMapping
-    public ResponseEntity<Page<ProductDto>> getAllProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(productService.getAllProducts(page, size));
-    }
+//    @GetMapping
+//    public ResponseEntity<Page<ProductDto>> getAllProducts(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size) {
+//        return ResponseEntity.ok(productService.getAllProducts(page, size));
+//    }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> updateProduct(@PathVariable UUID id, @RequestBody ProductDto productDto) {
+    @PutMapping
+    public ResponseEntity<ProductDto> updateProduct(@RequestParam UUID id, @RequestBody ProductDto productDto) {
         return ResponseEntity.ok(productService.updateProduct(id, productDto));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ProductDto> deleteProduct(@PathVariable UUID id) {
+    @DeleteMapping
+    public ResponseEntity<ProductDto> deleteProduct(@RequestParam UUID id) {
         return ResponseEntity.ok(productService.deleteProduct(id));
     }
 

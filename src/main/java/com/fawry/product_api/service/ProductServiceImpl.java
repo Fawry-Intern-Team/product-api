@@ -11,6 +11,7 @@ import com.fawry.product_api.model.entity.Product;
 import com.fawry.product_api.repository.CategoryRepository;
 import com.fawry.product_api.repository.ProductRepository;
 import com.fawry.product_api.util.ProductSpecifications;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
@@ -18,8 +19,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -111,34 +114,43 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<StoreProductResponse> getAllProductsWithStore(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
         List<Product> products = productRepository.findAll();
 
-        List<UUID> productIds = new ArrayList<>();
-        products.forEach(product -> productIds.add(product.getId()));
-        List<StoreProductResponse> responses = fetchProductDetailsWithStore(productIds);
+        if (products.isEmpty()) {
+            return new PageImpl<>(Collections.emptyList(), pageable, 0);
+        }
 
-        return new PageImpl<>(responses, PageRequest.of(page, size), responses.size());
+        List<StoreProductResponse> responses = fetchProductDetailsWithStore(
+                products.stream()
+                        .map(Product::getId)
+                        .collect(Collectors.toList())
+        );
+
+        return new PageImpl<>(responses, pageable, responses.size());
     }
 
     private List<StoreProductResponse> fetchProductDetailsWithStore(List<UUID> productIds) {
         List<List<Stock>> stocks = storeClient.getProductsWithStore(productIds);
-        log.info("Fetched stocks {}: {}", stocks.size(), stocks);
-        List<StoreProductResponse> storeProductResponses = new ArrayList<>();
-        stocks.forEach(stockList -> {
-            stockList.forEach(stock -> {
-                Product product = productRepository.findById(stock.getProductId())
-                        .orElseThrow(() -> new RuntimeException("Product not found with id: " + stock.getProductId()));
-                Store store = storeClient.getStoreById(stock.getStoreId());
-                StoreProductResponse response = getStoreProductResponse(product, store);
-                storeProductResponses.add(response);
-            });
-        });
+        log.debug("Fetched stocks count: {}", stocks.size());
 
-        return storeProductResponses;
-
+        return stocks.stream()
+                .flatMap(List::stream)
+                .map(this::buildStoreProductResponse)
+                .collect(Collectors.toList());
     }
 
-    private static StoreProductResponse getStoreProductResponse(Product product, Store store) {
+    private StoreProductResponse buildStoreProductResponse(Stock stock) {
+        Product product = productRepository.findById(stock.getProductId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Product not found with id: " + stock.getProductId()));
+
+        Store store = storeClient.getStoreById(stock.getStoreId());
+
+        return toStoreProductResponse(product, store);
+    }
+
+    private static StoreProductResponse toStoreProductResponse(Product product, Store store) {
         return StoreProductResponse.builder()
                 .productId(product.getId())
                 .productName(product.getName())

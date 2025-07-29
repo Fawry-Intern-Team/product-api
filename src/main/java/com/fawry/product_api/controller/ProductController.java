@@ -37,7 +37,6 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
-
     @PutMapping
     public ResponseEntity<ProductDto> updateProduct(@RequestParam UUID id, @RequestBody ProductDto productDto) {
         return ResponseEntity.ok(productService.updateProduct(id, productDto));

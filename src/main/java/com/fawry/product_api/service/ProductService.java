@@ -19,8 +19,7 @@ public interface ProductService {
 
     List<String> getSearchSuggestions(String partial);
 
-    Page<ProductDto> getFilteredProducts(String keyword, String category,
-                                         double minPrice, double maxPrice,
+    Page<ProductDto> getFilteredProducts(String keyword, String category, double min, double max,
                                          String sortBy, String sortDirection, int page, int size);
 
     Page<StoreProductResponse> getAllProductsWithStore(int page, int size);

@@ -99,18 +99,24 @@ public class ProductServiceImpl implements ProductService {
     public Page<ProductDto> getFilteredProducts(String keyword, String category, double min, double max,
                                                 String sortBy, String sortDirection, int page, int size) {
 
-        Specification<Product> specification = ProductSpecifications.withAllFilters(keyword, category, min, max);
+        String tsQuery = (keyword == null || keyword.trim().isEmpty())
+                ? "" : keyword.trim().replaceAll("[^\\w\\s]", "").replaceAll("\\s+", " & ");
 
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(page, size);
 
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Product> products = productRepository.searchFullText(
+                tsQuery,
+                category,
+                min > 0 ? min : null,
+                max > 0 ? max : null,
+                sortBy,
+                sortDirection,
+                pageable
+        );
 
-        Page<Product> productPage = productRepository.findAll(specification, pageable);
-        log.info("Fetching filtered products with keyword: {}, category: {}, minPrice: {}, maxPrice: {}, sortBy: {}, sortDirection: {}, page: {}, size: {}",
-                keyword, category, min, max, sortBy, sortDirection, page, size);
-
-        return productPage.map(productMapper::toDto);
+        return products.map(productMapper::toDto);
     }
+
 
     @Override
     public Page<StoreProductResponse> getAllProductsWithStore(int page, int size) {

@@ -19,6 +19,7 @@ public class StoreProductResponse {
     private String productDescription;
     private String imageUrl;
     private Double price;
+    private String categoryName;
     private UUID storeId;
     private String storeName;
     private String storeLocation;

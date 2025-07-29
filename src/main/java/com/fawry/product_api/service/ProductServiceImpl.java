@@ -13,16 +13,12 @@ import com.fawry.product_api.repository.ProductRepository;
 import com.fawry.product_api.util.ProductSpecifications;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -84,15 +80,6 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.toDto(product);
     }
 
-    @Override
-    public Page<ProductDto> getAllProducts(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Product> productPage = productRepository.findAll(pageable);
-
-        log.info("Total products found: {}", productPage.getTotalElements());
-
-        return productPage.map(productMapper::toDto);
-    }
 
     @Override
     public List<String> getSearchSuggestions(String partial) {
@@ -123,7 +110,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<StoreProductResponse> fetchProductDetailsWithStore(List<UUID> productIds) {
+    public Page<StoreProductResponse> getAllProductsWithStore(int page, int size) {
+        List<Product> products = productRepository.findAll();
+
+        List<UUID> productIds = new ArrayList<>();
+        products.forEach(product -> productIds.add(product.getId()));
+        List<StoreProductResponse> responses = fetchProductDetailsWithStore(productIds);
+
+        return new PageImpl<>(responses, PageRequest.of(page, size), responses.size());
+    }
+
+    private List<StoreProductResponse> fetchProductDetailsWithStore(List<UUID> productIds) {
         List<List<Stock>> stocks = storeClient.getProductsWithStore(productIds);
         log.info("Fetched stocks {}: {}", stocks.size(), stocks);
         List<StoreProductResponse> storeProductResponses = new ArrayList<>();
@@ -142,16 +139,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private static StoreProductResponse getStoreProductResponse(Product product, Store store) {
-        StoreProductResponse response = new StoreProductResponse();
-        response.setProductId(product.getId());
-        response.setProductName(product.getName());
-        response.setProductDescription(product.getDescription());
-        response.setImageUrl(product.getImageUrl());
-        response.setPrice(product.getPrice());
-        response.setStoreId(store.getId());
-        response.setStoreName(store.getName());
-        response.setStoreLocation(store.getLocation());
-        return response;
+        return StoreProductResponse.builder()
+                .productId(product.getId())
+                .productName(product.getName())
+                .productDescription(product.getDescription())
+                .imageUrl(product.getImageUrl())
+                .price(product.getPrice())
+                .categoryName(product.getCategory().getName())
+                .storeId(store.getId())
+                .storeName(store.getName())
+                .storeLocation(store.getLocation())
+                .build();
     }
 
 

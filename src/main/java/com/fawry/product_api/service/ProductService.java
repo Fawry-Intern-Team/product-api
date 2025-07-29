@@ -17,9 +17,7 @@ public interface ProductService {
 
     ProductDto deleteProduct(UUID id);
 
-    Page<ProductDto> getAllProducts(int page, int size);
-
-    List<StoreProductResponse> fetchProductDetailsWithStore(List<UUID> productIds);
+    Page<StoreProductResponse> getAllProductsWithStore(int page, int size);
 
     List<String> getSearchSuggestions(String partial);
 

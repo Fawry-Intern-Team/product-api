@@ -37,12 +37,6 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
-    @GetMapping
-    public ResponseEntity<Page<ProductDto>> getAllProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(productService.getAllProducts(page, size));
-    }
 
     @PutMapping
     public ResponseEntity<ProductDto> updateProduct(@RequestParam UUID id, @RequestBody ProductDto productDto) {
@@ -80,15 +74,15 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-
     /******************************************************************************************************/
     /********************************* Product Store Integration Endpoints ********************************/
     /******************************************************************************************************/
 
-    @PostMapping("/with-store")
-    public List<StoreProductResponse> getProductsWithStore(@RequestBody List<UUID> productIds) {
-        return productService.fetchProductDetailsWithStore(productIds);
+    @GetMapping
+    public ResponseEntity<Page<StoreProductResponse>> getAllProductsWithStore(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(productService.getAllProductsWithStore(page, size));
     }
-
 
 }

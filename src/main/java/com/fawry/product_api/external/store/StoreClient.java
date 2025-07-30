@@ -14,7 +14,7 @@ import java.util.UUID;
 @FeignClient(name = "store-service", url = "http://localhost:8087")
 public interface StoreClient {
 
-    @PostMapping("/api/stock/products")
+    @PostMapping("/api/store/stock/products")
     List<List<Stock>> getProductsWithStore(@RequestBody List<UUID> productIds);
 
     @GetMapping("/api/store/{id}")

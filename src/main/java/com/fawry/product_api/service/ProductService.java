@@ -22,5 +22,5 @@ public interface ProductService {
     Page<ProductDto> getFilteredProducts(String keyword, String category, double min, double max,
                                          String sortBy, String sortDirection, int page, int size);
 
-    Page<StoreProductResponse> getAllProductsWithStore(int page, int size);
+    List<StoreProductResponse> fetchProductDetailsWithStore(List<UUID> productIds);
 }

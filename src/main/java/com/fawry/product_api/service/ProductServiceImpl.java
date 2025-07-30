@@ -118,25 +118,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-    @Override
-    public Page<StoreProductResponse> getAllProductsWithStore(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        List<Product> products = productRepository.findAll();
-
-        if (products.isEmpty()) {
-            return new PageImpl<>(Collections.emptyList(), pageable, 0);
-        }
-
-        List<StoreProductResponse> responses = fetchProductDetailsWithStore(
-                products.stream()
-                        .map(Product::getId)
-                        .collect(Collectors.toList())
-        );
-
-        return new PageImpl<>(responses, pageable, responses.size());
-    }
-
-    private List<StoreProductResponse> fetchProductDetailsWithStore(List<UUID> productIds) {
+    public List<StoreProductResponse> fetchProductDetailsWithStore(List<UUID> productIds) {
         List<List<Stock>> stocks = storeClient.getProductsWithStore(productIds);
         log.debug("Fetched stocks count: {}", stocks.size());
 

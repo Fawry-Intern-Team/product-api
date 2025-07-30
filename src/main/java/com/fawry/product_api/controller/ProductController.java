@@ -79,7 +79,7 @@ public class ProductController {
     /******************************************************************************************************/
 
     @GetMapping
-    public ResponseEntity<Page<StoreProductResponse>> getProductsWithStoreByIds(
+    public ResponseEntity<Page<StoreProductResponse>> getAllProductsWithStore(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(productService.getAllProductsWithStore(page, size));

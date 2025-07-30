@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-@FeignClient(name = "store-service", url = "http://localhost:8087")
+@FeignClient(name = "store-service", url = "http://store-api:8087")
 public interface StoreClient {
 
     @PostMapping("/api/store/stock/products")

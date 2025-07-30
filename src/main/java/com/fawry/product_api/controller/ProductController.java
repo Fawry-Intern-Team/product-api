@@ -85,7 +85,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProductsWithStore(page, size));
     }
 
-    @GetMapping
+    @GetMapping("by-ids")
     public ResponseEntity<List<StoreProductResponse>> getProductsWithStoreByIds(
             @RequestParam List<UUID> productIds) {
         return ResponseEntity.ok(productService.fetchProductDetailsWithStore(productIds));

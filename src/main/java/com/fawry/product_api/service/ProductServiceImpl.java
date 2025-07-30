@@ -10,15 +10,12 @@ import com.fawry.product_api.model.entity.Category;
 import com.fawry.product_api.model.entity.Product;
 import com.fawry.product_api.repository.CategoryRepository;
 import com.fawry.product_api.repository.ProductRepository;
-import com.fawry.product_api.util.ProductSpecifications;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -96,8 +93,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDto> getFilteredProducts(String keyword, String category, double min, double max,
-                                                String sortBy, String sortDirection, int page, int size) {
+    public Page<StoreProductResponse> getFilteredProducts(String keyword, String category, double min, double max,
+                                                          String sortBy, String sortDirection, int page, int size) {
 
         String tsQuery = (keyword == null || keyword.trim().isEmpty())
                 ? "" : keyword.trim().replaceAll("[^\\w\\s]", "").replaceAll("\\s+", " & ");
@@ -114,17 +111,14 @@ public class ProductServiceImpl implements ProductService {
                 pageable
         );
 
-        return products.map(productMapper::toDto);
+        return getAllProductsWithStore(products.getContent(), page, size);
     }
 
-
     @Override
-    public Page<StoreProductResponse> getAllProductsWithStore(int page, int size) {
+    public Page<StoreProductResponse> getAllProductsWithStore(List<Product> products,int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        List<Product> products = productRepository.findAll();
-
-        if (products.isEmpty()) {
-            return new PageImpl<>(Collections.emptyList(), pageable, 0);
+        if(products == null || products.isEmpty()) {
+            products = productRepository.findAll();
         }
 
         List<StoreProductResponse> responses = fetchProductDetailsWithStore(
@@ -135,6 +129,7 @@ public class ProductServiceImpl implements ProductService {
 
         return new PageImpl<>(responses, pageable, responses.size());
     }
+
 
     @Override
     public List<StoreProductResponse> fetchProductDetailsWithStore(List<UUID> productIds) {
@@ -157,7 +152,7 @@ public class ProductServiceImpl implements ProductService {
         return toStoreProductResponse(product, store);
     }
 
-    private static StoreProductResponse toStoreProductResponse(Product product, Store store) {
+    private StoreProductResponse toStoreProductResponse(Product product, Store store) {
         return StoreProductResponse.builder()
                 .productId(product.getId())
                 .productName(product.getName())
@@ -170,6 +165,5 @@ public class ProductServiceImpl implements ProductService {
                 .storeLocation(store.getLocation())
                 .build();
     }
-
 
 }

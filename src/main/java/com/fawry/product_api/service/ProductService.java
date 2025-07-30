@@ -2,6 +2,7 @@ package com.fawry.product_api.service;
 
 import com.fawry.product_api.external.store.StoreProductResponse;
 import com.fawry.product_api.model.dto.ProductDto;
+import com.fawry.product_api.model.entity.Product;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 
@@ -19,10 +20,10 @@ public interface ProductService {
 
     List<String> getSearchSuggestions(String partial);
 
-    Page<ProductDto> getFilteredProducts(String keyword, String category, double min, double max,
+    Page<StoreProductResponse> getFilteredProducts(String keyword, String category, double min, double max,
                                          String sortBy, String sortDirection, int page, int size);
 
-    Page<StoreProductResponse> getAllProductsWithStore(int page, int size);
+    Page<StoreProductResponse> getAllProductsWithStore(List<Product> products, int page, int size);
 
     List<StoreProductResponse> fetchProductDetailsWithStore(List<UUID> productIds);
 

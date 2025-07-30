@@ -57,7 +57,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<ProductDto>> searchProducts(
+    public ResponseEntity<Page<StoreProductResponse>> searchProducts(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String category,
             @RequestParam(defaultValue = "0") double min,
@@ -67,7 +67,7 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size) {
 
-        Page<ProductDto> products = productService.getFilteredProducts(
+        Page<StoreProductResponse> products = productService.getFilteredProducts(
                 keyword, category, min, max, sortBy, sortDirection, page, size);
 
         return ResponseEntity.ok(products);
@@ -78,17 +78,17 @@ public class ProductController {
     /********************************* Product Store Integration Endpoints ********************************/
     /******************************************************************************************************/
 
-    @GetMapping
-    public ResponseEntity<Page<StoreProductResponse>> getAllProductsWithStore(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(productService.getAllProductsWithStore(page, size));
-    }
+//    @GetMapping
+//    public ResponseEntity<Page<StoreProductResponse>> getAllProductsWithStore(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size) {
+//        return ResponseEntity.ok(productService.getAllProductsWithStore(, page, size));
+//    }
 
-    @GetMapping("by-ids")
-    public ResponseEntity<List<StoreProductResponse>> getProductsWithStoreByIds(
-            @RequestParam List<UUID> productIds) {
-        return ResponseEntity.ok(productService.fetchProductDetailsWithStore(productIds));
-    }
+//    @GetMapping("by-ids")
+//    public ResponseEntity<List<StoreProductResponse>> getProductsWithStoreByIds(
+//            @RequestParam List<UUID> productIds) {
+//        return ResponseEntity.ok(productService.fetchProductDetailsWithStore(productIds));
+//    }
 
 }

@@ -100,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
                 ? "" : keyword.trim().replaceAll("[^\\w\\s]", "").replaceAll("\\s+", " & ");
 
         Pageable pageable = PageRequest.of(page, size);
-
+        System.out.println("a7a" + tsQuery);
         Page<Product> products = productRepository.searchFullText(
                 tsQuery,
                 category,
@@ -110,22 +110,25 @@ public class ProductServiceImpl implements ProductService {
                 sortDirection,
                 pageable
         );
-
+        for(var prod : products){
+            System.out.println(prod.getId());
+        }
         return getAllProductsWithStore(products.getContent(), page, size);
     }
 
     @Override
-    public Page<StoreProductResponse> getAllProductsWithStore(List<Product> products,int page, int size) {
+    public Page<StoreProductResponse> getAllProductsWithStore(List<Product> products, int page, int size) {
+
         Pageable pageable = PageRequest.of(page, size);
         if(products == null || products.isEmpty()) {
             products = productRepository.findAll();
         }
-
         List<StoreProductResponse> responses = fetchProductDetailsWithStore(
                 products.stream()
                         .map(Product::getId)
                         .collect(Collectors.toList())
         );
+        System.out.println(responses);
 
         return new PageImpl<>(responses, pageable, responses.size());
     }

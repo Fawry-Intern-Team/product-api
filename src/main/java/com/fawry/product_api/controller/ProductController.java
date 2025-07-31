@@ -58,8 +58,8 @@ public class ProductController {
 
     @GetMapping("/search")
     public ResponseEntity<Page<StoreProductResponse>> searchProducts(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "") String category,
             @RequestParam(defaultValue = "0") double min,
             @RequestParam(defaultValue = "0") double max,
             @RequestParam(defaultValue = "id") String sortBy,

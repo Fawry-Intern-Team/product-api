@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: Ahmed Radwan
+      changes:
+        - createTable:
+            tableName: stores
+            columns:
+              - column:
+                  name: store_id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: store_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: store_location
+                  type: VARCHAR(255)

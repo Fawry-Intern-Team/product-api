@@ -1,0 +1,285 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: Ahmed Radwan
+      changes:
+        # ===== Insert Categories =====
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: category_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: category_name
+                  value: Clothes
+              - column:
+                  name: category_description
+                  value: Clothing items for men and women
+
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: category_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: category_name
+                  value: Electronics
+              - column:
+                  name: category_description
+                  value: Electronic devices and gadgets
+        # ===== Additional Categories =====
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_id, valueComputed: uuid_generate_v4() }
+              - column: { name: category_name, value: Books }
+              - column: { name: category_description, value: Various genres of books and literature }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_id, valueComputed: uuid_generate_v4() }
+              - column: { name: category_name, value: Home Appliances }
+              - column: { name: category_description, value: Devices and appliances for home use }
+
+        - insert:
+            tableName: categories
+            columns:
+              - column: { name: category_id, valueComputed: uuid_generate_v4() }
+              - column: { name: category_name, value: Toys }
+              - column: { name: category_description, value: Children's toys and games }
+
+
+        # ===== Insert Stores =====
+        - insert:
+            tableName: stores
+            columns:
+              - column:
+                  name: store_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: store_name
+                  value: City Center Store
+              - column:
+                  name: store_location
+                  value: Nasr City Cairo
+
+        - insert:
+            tableName: stores
+            columns:
+              - column:
+                  name: store_id
+                  valueComputed: uuid_generate_v4()
+              - column:
+                  name: store_name
+                  value: Mall of Egypt
+              - column:
+                  name: store_location
+                  value: 6th October Giza
+        # ===== Additional Stores =====
+        - insert:
+            tableName: stores
+            columns:
+              - column: { name: store_id, valueComputed: uuid_generate_v4() }
+              - column: { name: store_name, value: Downtown Store }
+              - column: { name: store_location, value: Downtown Cairo }
+
+        - insert:
+            tableName: stores
+            columns:
+              - column: { name: store_id, valueComputed: uuid_generate_v4() }
+              - column: { name: store_name, value: Alexandria Outlet }
+              - column: { name: store_location, value: Raml Station Alexandria }
+
+        - insert:
+            tableName: stores
+            columns:
+              - column: { name: store_id, valueComputed: uuid_generate_v4() }
+              - column: { name: store_name, value: Zagazig Plaza }
+              - column: { name: store_location, value: Zagazig Sharqia }
+
+        # ===== Insert Products (Clothes / City Center Store) =====
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Cotton T-Shirt" }
+              - column: { name: description, value: "Comfortable cotton t-shirt for daily wear" }
+              - column: { name: product_price, valueNumeric: 199.99 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Clothes')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'City Center Store')" }
+              - column: { name: stock_quantity, valueNumeric: 100 }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Blue Jeans" }
+              - column: { name: description, value: "Slim-fit jeans made from high-quality denim" }
+              - column: { name: product_price, valueNumeric: 349.50 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Clothes')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'City Center Store')" }
+              - column: { name: stock_quantity, valueNumeric: 80 }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Winter Hoodie" }
+              - column: { name: description, value: "Fleece-lined hoodie for winter" }
+              - column: { name: product_price, valueNumeric: 299.00 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Clothes')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'City Center Store')" }
+              - column: { name: stock_quantity, valueNumeric: 60 }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Sneakers" }
+              - column: { name: description, value: "Comfortable everyday sneakers" }
+              - column: { name: product_price, valueNumeric: 450.00 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Clothes')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'City Center Store')" }
+              - column: { name: stock_quantity, valueNumeric: 120 }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Baseball Cap" }
+              - column: { name: description, value: "Adjustable cap for casual wear" }
+              - column: { name: product_price, valueNumeric: 75.00 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Clothes')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'City Center Store')" }
+              - column: { name: stock_quantity, valueNumeric: 150 }
+
+        # ===== Insert Products (Electronics / Mall of Egypt) =====
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Samsung Smart TV" }
+              - column: { name: description, value: "55-inch 4K UHD Smart TV with apps" }
+              - column: { name: product_price, valueNumeric: 11000.00 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Electronics')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'Mall of Egypt')" }
+              - column: { name: stock_quantity, valueNumeric: 40 }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Wireless Headphones" }
+              - column: { name: description, value: "Noise-canceling over-ear headphones" }
+              - column: { name: product_price, valueNumeric: 899.99 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Electronics')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'Mall of Egypt')" }
+              - column: { name: stock_quantity, valueNumeric: 70 }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Bluetooth Speaker" }
+              - column: { name: description, value: "Portable speaker with deep bass" }
+              - column: { name: product_price, valueNumeric: 499.99 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Electronics')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'Mall of Egypt')" }
+              - column: { name: stock_quantity, valueNumeric: 85 }
+
+                # ===== Additional Products =====
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Novel - Fiction" }
+              - column: { name: description, value: "Best-selling fiction novel" }
+              - column: { name: product_price, valueNumeric: 250.0 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Books')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'Downtown Store')" }
+              - column: { name: stock_quantity, valueNumeric: 78 }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Cookbook" }
+              - column: { name: description, value: "Recipes from around the world" }
+              - column: { name: product_price, valueNumeric: 180.0 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Books')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'Downtown Store')" }
+              - column: { name: stock_quantity, valueNumeric: 142 }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Children Storybook" }
+              - column: { name: description, value: "Colorful stories for kids" }
+              - column: { name: product_price, valueNumeric: 90.0 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Books')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'Downtown Store')" }
+              - column: { name: stock_quantity, valueNumeric: 158 }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Microwave Oven" }
+              - column: { name: description, value: "700W microwave oven" }
+              - column: { name: product_price, valueNumeric: 999.99 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Home Appliances')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'Zagazig Plaza')" }
+              - column: { name: stock_quantity, valueNumeric: 61 }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Vacuum Cleaner" }
+              - column: { name: description, value: "Powerful suction vacuum" }
+              - column: { name: product_price, valueNumeric: 1299.50 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Home Appliances')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'Zagazig Plaza')" }
+              - column: { name: stock_quantity, valueNumeric: 104 }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Air Fryer" }
+              - column: { name: description, value: "Healthy cooking fryer" }
+              - column: { name: product_price, valueNumeric: 1150.75 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Home Appliances')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'Zagazig Plaza')" }
+              - column: { name: stock_quantity, valueNumeric: 172 }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: product_id, valueComputed: uuid_generate_v4() }
+              - column: { name: product_name, value: "Action Figure" }
+              - column: { name: description, value: "Superhero toy figure" }
+              - column: { name: product_price, valueNumeric: 150.00 }
+              - column: { name: img_url, value: "# Add image URL here" }
+              - column: { name: category_id, valueComputed: "(SELECT category_id FROM categories WHERE category_name = 'Toys')" }
+              - column: { name: store_id, valueComputed: "(SELECT store_id FROM stores WHERE store_name = 'Alexandria Outlet')" }
+              - column: { name: stock_quantity, valueNumeric: 95 }
+

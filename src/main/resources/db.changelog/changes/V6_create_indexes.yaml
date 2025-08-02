@@ -1,0 +1,79 @@
+databaseChangeLog:
+  - changeSet:
+      id: 6-1
+      author: ahmed.radwan
+      changes:
+        - createIndex:
+            indexName: idx_product_name
+            tableName: products
+            columns:
+              - column:
+                  name: product_name
+
+  - changeSet:
+      id: 6-2
+      author: ahmed.radwan
+      changes:
+        - createIndex:
+            indexName: idx_product_price
+            tableName: products
+            columns:
+              - column:
+                  name: product_price
+
+  - changeSet:
+      id: 6-3
+      author: ahmed.radwan
+      changes:
+        - createIndex:
+            indexName: idx_category_id
+            tableName: products
+            columns:
+              - column:
+                  name: category_id
+
+  - changeSet:
+      id: 6-4
+      author: ahmed.radwan
+      changes:
+        - createIndex:
+            indexName: idx_store_id
+            tableName: products
+            columns:
+              - column:
+                  name: store_id
+
+  - changeSet:
+      id: 6-5
+      author: ahmed.radwan
+      changes:
+        - addColumn:
+            tableName: products
+            columns:
+              - column:
+                  name: search_vector
+                  type: tsvector
+
+  - changeSet:
+      id: 6-6
+      author: ahmed.radwan
+      changes:
+        - sql:
+            comment: populate search_vector with product_name and description
+            splitStatements: false
+            sql: |
+              UPDATE products
+              SET search_vector = 
+                to_tsvector('english', coalesce(product_name,'') || ' ' || coalesce(description,''));
+
+  - changeSet:
+      id: 6-7
+      author: ahmed.radwan
+      changes:
+        - createIndex:
+            indexName: idx_search_vector
+            tableName: products
+            columns:
+              - column:
+                  name: search_vector
+            indexType: GIN

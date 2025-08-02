@@ -1,27 +1,8 @@
 databaseChangeLog:
   - changeSet:
-      id: 1
+      id: 3
       author: Ahmed Radwan
       changes:
-        - createTable:
-            tableName: categories
-            columns:
-              - column:
-                  name: category_id
-                  type: UUID
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: category_name
-                  type: VARCHAR(100)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
-                  name: category_description
-                  type: TEXT
-
         - createTable:
             tableName: products
             columns:
@@ -31,54 +12,61 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+
               - column:
                   name: product_name
                   type: VARCHAR(100)
                   constraints:
                     nullable: false
+
               - column:
                   name: description
                   type: TEXT
+
               - column:
                   name: product_price
                   type: DOUBLE PRECISION
                   constraints:
                     nullable: false
+
               - column:
                   name: img_url
                   type: TEXT
+
               - column:
                   name: category_id
                   type: UUID
+
+              - column:
+                  name: store_id
+                  type: UUID
+
               - column:
                   name: stock_quantity
                   type: INTEGER
                   defaultValueNumeric: 0
+
               - column:
                   name: created_at
                   type: TIMESTAMP WITH TIME ZONE
                   defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
+
               - column:
                   name: updated_at
                   type: TIMESTAMP WITH TIME ZONE
                   defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
+
               - column:
                   name: deleted_at
                   type: TIMESTAMP WITH TIME ZONE
+
               - column:
                   name: is_deleted
                   type: BOOLEAN
                   defaultValueBoolean: false
                   constraints:
                     nullable: false
-
-        - addForeignKeyConstraint:
-            baseTableName: products
-            baseColumnNames: category_id
-            referencedTableName: categories
-            referencedColumnNames: category_id
-            constraintName: fk_products_category
